@@ -121,51 +121,6 @@ This task is in the directory _./drug\_response_. Please check the README inside
 
 This task is in the directory _./drug\_combination_. Please check the README inside it. 
 
-## Dosage sensitivity prediction
-
-This task is in the directory _./dosage_sensitivity_.
-
-The dataset of Geneformer needs to be downloaded, [_genecorpus_30M_2048.dataset_](https://huggingface.co/datasets/ctheodoris/Genecorpus-30M/tree/main)
-
-Also download the [_gene_info_table.csv_](https://huggingface.co/datasets/ctheodoris/Genecorpus-30M/tree/main/example_input_files) and the [_dosage_sensitivity_TFs.pickle_](https://huggingface.co/datasets/ctheodoris/Genecorpus-30M/tree/main/example_input_files/gene_classification/dosage_sensitive_tfs).
-
-```
-python finetune_dosage.py \
-  --ckpt_dir ckpts_1b/ \
-  --finetune_dataset genecorpus_30M_2048.dataset \
-  --gene_info_table gene_info_table.csv \
-  --dosage_sensitivity_TFs_path dosage_sensitivity_TFs.pickle \
-  --model_name gocont_4096_48m_pretrain_1b_mix \
-  --gene2vec_data_path selected_gene2vec_27k.npy \
-  --gene_list_path selected_genes_27k.txt \
-  --go_data_path human_ens_gene2go_graph.csv \
-  --model_path gocont_4096_48m_pretrain_1b_mix_2024-02-05_16-23-37.pth \
-```
-Note: Chromatin dynamics prediction needs the repository of [Geneformer](https://huggingface.co/ctheodoris/Geneformer), please run this task in the corresponding environment.
-
-## Chromatin dynamics prediction
-
-This task is in the directory _./chromatin_dynamics_.
-
-These datasets needs to be downloaded: [_panglao_SRA553822-SRS2119548.dataset, bivalent_vs_no_methyl.pickle_](https://huggingface.co/datasets/ctheodoris/Genecorpus-30M/tree/main/example_input_files/gene_classification/bivalent_promoters)
-
-Also download the [_gene_info_table.csv_](https://huggingface.co/datasets/ctheodoris/Genecorpus-30M/tree/main/example_input_files).
-
-```
-python finetune_chromatin.py \
-  --ckpt_dir ckpts_1b/ \
-  --finetune_dataset panglao_SRA553822-SRS2119548.dataset \
-  --gene_info_table gene_info_table.csv \
-  --bivalent_TFs_path bivalent_vs_no_methyl.pickle \
-  --model_name gocont_4096_48m_pretrain_1b_mix \
-  --gene2vec_data_path selected_gene2vec_27k.npy \
-  --gene_list_path selected_genes_27k.txt \
-  --go_data_path human_ens_gene2go_graph.csv \
-  --model_path gocont_4096_48m_pretrain_1b_mix_2024-02-05_16-23-37.pth \
-```
-
-Note: Chromatin dynamics prediction needs the repository of [Geneformer](https://huggingface.co/ctheodoris/Geneformer), please run this task in the corresponding environment.
-
 ## GRN inference
 
 This task is in the directory _./GRN\_inference_. Please check the README inside it. 
