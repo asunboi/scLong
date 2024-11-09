@@ -1,0 +1,1 @@
+from performer_pytorch_cont.performer_pytorch import PerformerLM, Performer, FastAttention, SelfAttention
