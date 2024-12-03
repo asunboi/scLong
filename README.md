@@ -4,23 +4,25 @@
 
 # Install
 
-scipy
+Python v3.7.16 (https://www.python.org/), 
 
-numpy
+NumPy v1.21.5 (https://github.com/numpy/numpy), 
 
-pickle5
+SciPy v1.7.3 (https://www.scipy.org/), 
 
-scanpy
+seaborn v0.12.2 (https://github.com/mwaskom/seaborn), 
 
-PyTorch (GPU)
+Matplotlib v3.5.3 (https://github.com/matplotlib/matplotlib), 
 
-PyTorch Geometric
+Pandas v1.3.5 (https://github.com/pandas-dev/pandas), 
 
-pandas
+scikit-learn v1.0.2 (https://github.com/scikit-learn/scikit-learn) 
 
-scikit-learn
+scanpy 1.9.3 (https://github.com/scverse/scanpy).
 
-transformers
+pickle5 0.0.12 (https://pypi.org/project/pickle5/)
+
+PyTorch Geometric 2.3.0 (https://github.com/pyg-team/pytorch_geometric)
 
 # Pretraining Data
 
