@@ -15,13 +15,13 @@ from scipy.stats import pearsonr
 import yaml
 from matplotlib_venn import venn3
 
-# 设置 matplotlib 使用 TrueType 字体 (Type 42) 而不是 Type 3
-plt.rcParams['pdf.fonttype'] = 42
-plt.rcParams['ps.fonttype'] = 42
+# Set Arial globally in Matplotlib configuration
+plt.rcParams['font.family'] = 'DejaVu Sans'
 
-# 设置全局字体，可以选择其他常见的字体，比如 Arial
-plt.rcParams['font.family'] = 'DejaVu Sans'  # 或者 'Arial'
-plt.rcParams['font.size'] = 12
+plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+plt.rcParams['font.size'] = 9
+plt.rcParams['svg.fonttype'] = 'none' 
+plt.rcParams['lines.linewidth'] = 0.5
 #set +o noclobber
 #python GI_analysis.py > txt/GI_analysis.txt 2>&1
 
@@ -168,7 +168,7 @@ for DE_num in DE_nums:
         pert_graph_dict[pert] = pert_nodes
 
     
-    pred_dir_dict = {'LongSC': '/home/ding.bai/ding-scfmv1-downstream/GEARS/result_process/preds/scfm_gears_downstream_hs1024-1b-02-05',
+    pred_dir_dict = {'scLong': '/home/ding.bai/ding-scfmv1-downstream/GEARS/result_process/preds/scfm_gears_downstream_hs1024-1b-02-05',
                     'GEARS': '/l/users/ding.bai/all_backup/pert_new/GEARS/preds/GEARS_seed_1_data_norman'}
     methods = list(pred_dir_dict.keys())
 
@@ -195,7 +195,7 @@ for DE_num in DE_nums:
             pert_rows = defaultdict(list)
             
             for i in range(pred_array.shape[0]):
-                if method == 'LongSC':
+                if method == 'scLong':
                     pert = tuple(np.where(pred_array[i, :, 0] > 0.5)[0])
                     if len(pert) == 0:
                         continue
@@ -278,7 +278,7 @@ for DE_num in DE_nums:
         print(f'>> Sceanario: {name};')
         magnitude_vecs = {'Ground Truth': [],
                         'GEARS': [],
-                        'LongSC': []}
+                        'scLong': []}
         for pert in scenario:
             DE = DE_dict[pert]
             genes = np.array([ad.var.gene_name.tolist()[i] for i in DE])
@@ -303,8 +303,8 @@ for DE_num in DE_nums:
                 reg_vec = np.linalg.inv((X_true.T @ X_true)) @ X_true.T @ ours_change_vec
                 magnitude_vecs[method].append(np.sqrt(reg_vec[0]**2 + reg_vec[1]**2))
 
-        perts_dict = {'synergy': {'Ground Truth': [], 'GEARS': [], 'LongSC': []}, 
-                      'suppressor': {'Ground Truth': [], 'GEARS': [], 'LongSC': []}}
+        perts_dict = {'synergy': {'Ground Truth': [], 'GEARS': [], 'scLong': []}, 
+                      'suppressor': {'Ground Truth': [], 'GEARS': [], 'scLong': []}}
         
         for k, v in magnitude_vecs.items():
             v = np.array(v)
@@ -316,17 +316,17 @@ for DE_num in DE_nums:
         with open(f'yaml/synergy_suppressor_de_{DE_num}.yaml', 'w') as file:
             yaml.dump(perts_dict, file, default_flow_style=False, sort_keys=False, indent=4)
 
-        fig, axes = plt.subplots(1, 2, figsize=(6, 3))
+        fig, axes = plt.subplots(1, 2, figsize=(3.6, 1.8))
 
         # 设置不同颜色
         colors = ['#CC99FF', '#FFCC99', '#66B2FF']
 
         # 绘制第一个子图 (synergy)
         venn3(
-            [set(perts_dict['synergy']['LongSC']), 
+            [set(perts_dict['synergy']['scLong']), 
             set(perts_dict['synergy']['GEARS']), 
             set(perts_dict['synergy']['Ground Truth'])],
-            set_labels=('LongSC', 'GEARS', 'Ground Truth'),
+            set_labels=('scLong', 'GEARS', 'Ground Truth'),
             set_colors=colors,
             ax=axes[0]
         )
@@ -334,32 +334,32 @@ for DE_num in DE_nums:
 
         # 绘制第二个子图 (suppressor)
         venn3(
-            [set(perts_dict['suppressor']['LongSC']), 
+            [set(perts_dict['suppressor']['scLong']), 
             set(perts_dict['suppressor']['GEARS']), 
             set(perts_dict['suppressor']['Ground Truth'])],
-            set_labels=('LongSC', 'GEARS', 'Ground Truth'),
+            set_labels=('scLong', 'GEARS', 'Ground Truth'),
             set_colors=colors,
             ax=axes[1]
         )
         axes[1].set_title('Suppressor')
 
         plt.tight_layout()
-        plt.savefig(f'figs/synergy_suppresor_venn3_de_{DE_num}.pdf')
+        plt.savefig(f'figs/synergy_suppresor_venn3_de_{DE_num}.svg', format='svg')
 
         plt.close()
 
         # 创建两个子图
-        fig, axes = plt.subplots(1, 2, figsize=(6, 3))
+        fig, axes = plt.subplots(1, 2, figsize=(3.6, 1.8))
 
         # 设置相同的 x 和 y 轴范围（保证为方形）
         x_limits = [0, 3.8]
         y_limits = x_limits  # 保证 x 和 y 范围相同
 
         # 绘制第一张散点图 (Ground Truth vs GEARS)
-        axes[0].scatter(magnitude_vecs['Ground Truth'], magnitude_vecs['GEARS'], c='#FFCC99', marker = 'x')
+        axes[0].scatter(magnitude_vecs['Ground Truth'], magnitude_vecs['GEARS'], c='#FFCC99', marker = 'x', s=plt.rcParams['lines.markersize'] ** 2/2)
         axes[0].plot(x_limits, y_limits, 'r--')  # 45度红色虚线
-        axes[0].set_xlabel('Ground Truth', fontsize = 12)
-        axes[0].set_ylabel('GEARS', fontsize = 12)
+        axes[0].set_xlabel('Ground Truth', fontsize = 9)
+        axes[0].set_ylabel('GEARS', fontsize = 9)
         axes[0].set_xticks(ticks=1 * np.arange(4))
         axes[0].set_yticks(ticks=1 * np.arange(4))
 
@@ -370,7 +370,7 @@ for DE_num in DE_nums:
         pearson_corr, _ = pearsonr(magnitude_vecs['Ground Truth'], magnitude_vecs['GEARS'])
         axes[0].text(0.95, 0.05, f'Pearson: {pearson_corr:.2f}', 
                     horizontalalignment='right', verticalalignment='bottom',
-                    transform=axes[0].transAxes, fontsize =9)
+                    transform=axes[0].transAxes, fontsize =7)
 
         # 设置相同的x和y轴范围
         axes[0].set_xlim(x_limits)
@@ -378,10 +378,10 @@ for DE_num in DE_nums:
         axes[0].set_aspect('equal', adjustable='box')  # 设置方形图
 
         # 绘制第二张散点图 (Ground Truth vs ours)
-        axes[1].scatter(magnitude_vecs['Ground Truth'], magnitude_vecs['LongSC'], c='#CC99FF', marker = 'x')
+        axes[1].scatter(magnitude_vecs['Ground Truth'], magnitude_vecs['scLong'], c='#CC99FF', marker = 'x',s=plt.rcParams['lines.markersize'] ** 2/2)
         axes[1].plot(x_limits, y_limits, 'r--')  # 45度红色虚线
-        axes[1].set_xlabel('Ground Truth', fontsize = 12)
-        axes[1].set_ylabel('LongSC', fontsize = 12)
+        axes[1].set_xlabel('Ground Truth', fontsize = 9)
+        axes[1].set_ylabel('scLong', fontsize = 9)
         axes[1].set_xticks(ticks=1 * np.arange(4))
         axes[1].set_yticks(ticks=1 * np.arange(4))
 
@@ -389,10 +389,10 @@ for DE_num in DE_nums:
         axes[1].spines['top'].set_visible(False)
 
         # 计算 Pearson 相关系数并在右下角显示
-        pearson_corr, _ = pearsonr(magnitude_vecs['Ground Truth'], magnitude_vecs['LongSC'])
+        pearson_corr, _ = pearsonr(magnitude_vecs['Ground Truth'], magnitude_vecs['scLong'])
         axes[1].text(0.95, 0.05, f'Pearson: {pearson_corr:.2f}', 
                     horizontalalignment='right', verticalalignment='bottom',
-                    transform=axes[1].transAxes, fontsize = 9)
+                    transform=axes[1].transAxes, fontsize = 7)
 
         # 设置相同的x和y轴范围
         axes[1].set_xlim(x_limits)
@@ -402,7 +402,7 @@ for DE_num in DE_nums:
         plt.title('Magnitude')
         # 保存图像
         plt.tight_layout()
-        plt.savefig(f'figs/magnitude_scatter_plots_de_{DE_num}.pdf')
+        plt.savefig(f'figs/magnitude_scatter_plots_de_{DE_num}.svg', format='svg')
 
 
 
