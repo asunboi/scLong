@@ -11,12 +11,12 @@ import os
 import anndata
 from scipy import stats
 
-# 设置 matplotlib 使用 TrueType 字体 (Type 42) 而不是 Type 3
-plt.rcParams['pdf.fonttype'] = 42
-plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['font.family'] = 'DejaVu Sans'
 
-# 设置全局字体，可以选择其他常见的字体，比如 Arial
-plt.rcParams['font.family'] = 'DejaVu Sans'  # 或者 'Arial'
+plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+plt.rcParams['font.size'] = 9
+plt.rcParams['svg.fonttype'] = 'none' 
+plt.rcParams['lines.linewidth'] = 0.5
 
 
 gene_names = np.load('clustermap_info/de_gene_names_304.npy')
@@ -127,7 +127,7 @@ data = np.load('clustermap_info/MSE_mat_79x304.npy')
 data = np.abs(data)
 
 pert_idxes = np.argsort(data.sum(axis = 1))[-40:]
-gene_idxes = np.argsort(data.sum(axis = 0))[-60:]
+gene_idxes = np.argsort(data.sum(axis = 0))[-90:]
 
 gene_names = gene_names[gene_idxes]
 pert_groups = pert_groups[pert_idxes]
@@ -153,7 +153,7 @@ b = sns.clustermap(
     colors_ratio=0.01,
 #     standard_scale=0, # Cols
     cmap='Reds', 
-    figsize=(7.5, 5), 
+    figsize=(7.5, 5 * 2/3), 
     dendrogram_ratio=(0.05, 0.2),
     cbar_pos=(0.02, 0.98, 0.01, 0.08),
     #cbar_kws={'fontsize': 5},
@@ -162,10 +162,10 @@ b = sns.clustermap(
 )
 plt.rcParams['axes.titley'] = 1.2
 plt.rcParams['axes.titlepad'] = 10
-b.ax_heatmap.set_yticklabels(b.ax_heatmap.get_yticklabels(), size=4)
-b.ax_heatmap.set_xticklabels(b.ax_heatmap.get_xticklabels(), size=6)
-b.ax_heatmap.set_ylabel('Multiplexed Perturbations', labelpad=5, size=12)
-b.ax_heatmap.set_xlabel('Genes', labelpad=0, size=12)
+b.ax_heatmap.set_yticklabels(b.ax_heatmap.get_yticklabels(), size=4 * 2/3)
+b.ax_heatmap.set_xticklabels(b.ax_heatmap.get_xticklabels(), size=6 * 2/3)
+b.ax_heatmap.set_ylabel('Multiplexed Perturbations', labelpad=5, size=9)
+b.ax_heatmap.set_xlabel('Genes', labelpad=0, size=9)
 
 # ax_row_colors = b.ax_row_colors
 # box = ax_row_colors.get_position()
@@ -181,7 +181,7 @@ b.ax_heatmap.set_xlabel('Genes', labelpad=0, size=12)
 
 # b.ax_col_dendrogram.set_title('Errors Reveal Gene-specific Behavior')
 # plt.title('Errors Reveal Gene-specific Behavior', loc='left')
-plt.savefig('figs/clustermap_wide.pdf', bbox_inches='tight')
+plt.savefig('figs/clustermap_wide.svg', format='svg', bbox_inches='tight')
 
 
 '''
