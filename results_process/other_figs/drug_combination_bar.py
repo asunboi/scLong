@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import pyplot
 import numpy as np
+import yaml
 
 
 # 设置 matplotlib 使用 TrueType 字体 (Type 42) 而不是 Type 3
@@ -14,16 +15,10 @@ color_dict = {'DeepDDS': '#FFCC99',
               'Geneformer': '#99CC99',
               'LongSC': '#CC99FF'}
 
-data1 = np.array([
-    [0.606],
-    [0.63497],
-    [0.645]
-])
-errors = np.array([
-    [0.029],
-    [0.0065],
-    [0.007]
-])
+with open('drug_comb_dict.yml', 'r', encoding='utf-8') as file:
+    drug_comb_dict = yaml.load(file, Loader=yaml.FullLoader)
+data1 = np.array(drug_comb_dict['data1']).reshape((-1, 1))
+errors = np.array(drug_comb_dict['errors']).reshape((-1, 1))
 
 
 bar_width=0.3
