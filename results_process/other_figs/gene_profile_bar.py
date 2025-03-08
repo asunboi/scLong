@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import pyplot
 import numpy as np
-import yaml
+import pickle
 
 plt.rcParams['font.family'] = 'DejaVu Sans'
 
@@ -18,20 +18,28 @@ dataset = "DeepCE"
 color_dict = {'DeepCE': '#FFCC99',
               'Geneformer': '#99CC99',
               'scGPT': '#FF9999',
+              'scFoundation': '#D1B26F',
+              'UCE': '#99FFCC',
               'scLong': '#CC99FF'}
 
-with open('gene_profile_dict.yml', 'r', encoding='utf-8') as file:
-    gene_profile_dict = yaml.load(file, Loader=yaml.FullLoader)
-data1 = np.array(gene_profile_dict['data1']).reshape((-1, 1))
-data2 = np.array(gene_profile_dict['data2']).reshape((-1, 1))
-data3 = np.array(gene_profile_dict['data3']).reshape((-1, 1))
-data4 = np.array(gene_profile_dict['data4']).reshape((-1, 1))
-data5 = np.array(gene_profile_dict['data5']).reshape((-1, 1))
+with open('gene_profile_dict.pkl', 'rb') as file:
+    gene_profile_dict = pickle.load(file)
+
+data1 = np.array(gene_profile_dict['data1'])
 std_err1 = np.array(gene_profile_dict['std_err1'])
+
+data2 = np.array(gene_profile_dict['data2'])
 std_err2 = np.array(gene_profile_dict['std_err2'])
+
+data3 = np.array(gene_profile_dict['data3'])
 std_err3 = np.array(gene_profile_dict['std_err3'])
+
+data4 = np.array(gene_profile_dict['data4'])
 std_err4 = np.array(gene_profile_dict['std_err4'])
+
+data5 = np.array(gene_profile_dict['data5'])
 std_err5 = np.array(gene_profile_dict['std_err5'])
+
 
 y1 = np.mean(data1, axis=1)
 y2 = np.mean(data2, axis=1)
@@ -42,11 +50,13 @@ y5 = np.mean(data5, axis=1)
 #ys = [y1, y2, y3, y4, y5]
 ys = [y5, y1, y2, y3, y4]
 
+
+
+
 #std_errs = [std_err1, std_err2, std_err3, std_err4, std_err5]
 std_errs = [std_err5, std_err1, std_err2, std_err3, std_err4]
 
-print(y1.shape,std_err1.shape)
-models = ['DeepCE', 'Geneformer', 'scGPT', 'scLong']
+models = ['DeepCE', 'Geneformer', 'scGPT', 'scFoundation', 'UCE', 'scLong']
 
 
 #######################
@@ -54,10 +64,10 @@ models = ['DeepCE', 'Geneformer', 'scGPT', 'scLong']
 
 
 fig = plt.figure(figsize=(7.2, 1.8))  # 设置整体图形大小
-gs = fig.add_gridspec(1, 5)
-axs = [fig.add_subplot(gs[0, 0:1]),
-       fig.add_subplot(gs[0, 1:3]),
-       fig.add_subplot(gs[0, 3:5])]
+gs = fig.add_gridspec(1, 8)
+axs = [fig.add_subplot(gs[0, 0:2]),
+       fig.add_subplot(gs[0, 2:5]),
+       fig.add_subplot(gs[0, 5:8])]
 
 #scenario_names_sets = [["Spearman", "Pearson"], ['Pos-P@100', 'Neg-P@100'], ['Root mean squared error']]
 scenario_names_sets = [['Root mean squared error'], ["Spearman", "Pearson"], ['Pos-P@100', 'Neg-P@100'], ]
