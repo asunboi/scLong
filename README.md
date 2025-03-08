@@ -70,6 +70,9 @@ python pretrain_gocont_4096_all_1b_mix.py \
 # Embed
 
 - Extract the representations of your own dataset using pretrained scLong. The dataset should be: h5ad file; var.index are ENSEMBL IDs; expressions are log1p normalized.
+
+- download our pretrained model checkpoint here:
+[_gocont_4096_48m_pretrain_1b_mix_2024-02-05_16-23-37.pth_](https://mbzuaiac-my.sharepoint.com/:f:/g/personal/ding_bai_mbzuai_ac_ae/EpvKzQW4hI5Bnb88-iM7vE0B_e2_U5r_ZGXb_FILCLTw3Q?e=TAmKk5) 
 ```
 python embed.py --target_data_path [path_to_your_dataset] --target_embed_path [path_to_save_representations]
 ```
@@ -142,7 +145,7 @@ Please download dataset from [_zero-shot-batch_](https://mbzuaiac-my.sharepoint.
 
 Then run
 ```
-CUDA_VISIBLE_DEVICES=0 python scLong_zero_shot.py > res/scLong_zero_shot_test.txt 2>&1
+python scLong_zero_shot.py
 ```
 
 # Results process
