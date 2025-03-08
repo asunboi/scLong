@@ -19,8 +19,8 @@ import argparse
 from copy import deepcopy
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--target_data_path', type=str, default='selected_gene2vec_27k.npy')
-parser.add_argument('--gene2vec_path', type=str, default='')
+parser.add_argument('--target_data_path', type=str, default='')
+parser.add_argument('--gene2vec_path', type=str, default='selected_gene2vec_27k.npy')
 parser.add_argument('--scfm_hyper_params_path', type=str, default='gocont_4096_48m_pretrain_1b_mix.pkl')
 parser.add_argument('--scfm_ckpt_path', type=str, default='gocont_4096_48m_pretrain_1b_mix_2024-02-05_16-23-37.pth')
 parser.add_argument('--scfm_genes_list_path', type=str, default='selected_genes_27k.txt')
