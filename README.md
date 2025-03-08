@@ -67,6 +67,13 @@ python pretrain_gocont_4096_all_1b_mix.py \
   --grad_acc 200
 ```
 
+# Embed
+
+- Extract the representations of your own dataset using pretrained scLong. The dataset should be: h5ad file; var.index are ENSEMBL IDs; expressions are log1p normalized.
+```
+python embed.py --target_data_path [path_to_your_dataset] --target_embed_path [path_to_save_representations]
+```
+
 
 # Downstream tasks
 
@@ -126,6 +133,33 @@ This task is in the directory _./drug\_combination_. Please check the README ins
 ## GRN inference
 
 This task is in the directory _./GRN\_inference_. Please check the README inside it. 
+
+## Zero-shot batch integration
+
+This task is in the directory _./zero-shot-batch_. 
+
+Please download dataset from [_zero-shot-batch_](https://mbzuaiac-my.sharepoint.com/:f:/g/personal/ding_bai_mbzuai_ac_ae/EpvKzQW4hI5Bnb88-iM7vE0B_e2_U5r_ZGXb_FILCLTw3Q?e=TAmKk5)
+
+Then run
+```
+CUDA_VISIBLE_DEVICES=0 python scLong_zero_shot.py > res/scLong_zero_shot_test.txt 2>&1
+```
+
+# Results process
+
+To reproduce the figures in our manuscript, the directory _./results\_process_. 
+
+First download results from [_results and drug\_comb\_roc directories_](https://mbzuaiac-my.sharepoint.com/:f:/g/personal/ding_bai_mbzuai_ac_ae/EpvKzQW4hI5Bnb88-iM7vE0B_e2_U5r_ZGXb_FILCLTw3Q?e=TAmKk5)
+
+For genetic perturbation, run: **norman_mse_pearson.py**, **GI_analysis.py** and **pert_gene_cluster.py**;
+
+For chemical perturbation, run: **gene_profile_bar.py**;
+
+For single drug and drug combination, run: **drug_response_bar_drug_comb_barh_roc.py**;
+
+For GRN inference, run: **grn_inference_barh.py**;
+
+For zero-batch-integration, run: **batch_ASW_score.py**.
 
 # References
 
