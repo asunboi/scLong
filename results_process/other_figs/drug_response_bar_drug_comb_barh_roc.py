@@ -53,7 +53,7 @@ for ax_i, ax in enumerate(axes):
         for model_idx, model in enumerate(models):
             #ax.bar([(indices * width)[model_idx]], width=values[model_idx], xerr=errors[model_idx], width=width, color = colors[model_idx]) #, color=colors[model_idx % len(colors)])
             ax.barh([-(indices * width)[model_idx]] , width=values[model_idx], xerr=errors[model_idx], height=width * 1.2 , color = colors[model_idx])
-        ax.set_xlim((0.82, 0.88))
+        ax.set_xlim((0.82, 0.89))
         ax.set_xlabel(f'Pearson correlation', fontsize = 6)
         ax.set_xticks(ticks=0.02 * np.arange(41, 45))
         ax.set_yticks(ticks=-indices * width)
@@ -103,19 +103,6 @@ for ax_i, ax in enumerate(axes):
 
 
     else:
-        
-        with open(f'{curve_dir}/auc_drug_comb.txt', 'r') as file:
-            data = file.read()
-        data = data.replace('\n', ' ').replace('\t', ' ')
-        matches = re.findall(r'\[(.*?)\]', data)
-
-        arrays = []
-        for match in matches:
-            array = [float(num) for num in match.split( )]
-            arrays.append(np.array(array))
-
-        for idx, array in enumerate(arrays):
-            print(f"Array {idx + 1}: {array.shape}")
 
         color_dict = {'DeepDDS': '#FFCC99',
               'Geneformer': '#99CC99',
@@ -124,14 +111,17 @@ for ax_i, ax in enumerate(axes):
               'UCE': '#99FFCC',
               'scLong': '#CC99FF'}
 
-        arrays_dict = {'DeepDDS': arrays[0:3],
-                    'Geneformer': arrays[3:6]}
+        arrays_dict = {}
         
+        with open(f'{curve_dir}/fpr_tpr_deepdds_mean.pkl', 'rb') as f: 
+            arrays_dict['DeepDDS'] = pickle.load(f)
         auroc = np.trapz(arrays_dict['DeepDDS'][1], arrays_dict['DeepDDS'][0])
-        print(f'DeepDDS: {auroc}')
+        print(f"DeepDDS: AUROC:", auroc)
 
+        with open(f'{curve_dir}/fpr_tpr_geneformer_mean.pkl', 'rb') as f: 
+            arrays_dict['Geneformer'] = pickle.load(f)
         auroc = np.trapz(arrays_dict['Geneformer'][1], arrays_dict['Geneformer'][0])
-        print(f'Geneformer: {auroc}')
+        print(f"Geneformer: AUROC:", auroc)
 
         with open(f'{curve_dir}/fpr_tpr_scgpt_mean.pkl', 'rb') as f: 
             arrays_dict['scGPT'] = pickle.load(f)
