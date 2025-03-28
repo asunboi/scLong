@@ -12,7 +12,8 @@ plt.rcParams['font.size'] = 7
 plt.rcParams['svg.fonttype'] = 'none' 
 plt.rcParams['lines.linewidth'] = 0.5
 
-color_dict = {'DeepSEM': '#FFCC99',
+color_dict = {'GENIE3': '#FF99CC',
+                'DeepSEM': '#FFCC99',
               'Geneformer': '#99CC99',
               'scGPT': '#FF9999',
               'scFoundation': '#D1B26F',
@@ -28,7 +29,7 @@ data2 = np.array(grn_inference_dict['data2'])
 error1 = np.array(grn_inference_dict['error1'])
 error2 = np.array(grn_inference_dict['error2'])
 
-models = ['DeepSEM', 'Geneformer', 'scGPT', 'scFoundation', 'UCE', 'scLong']
+models = ['GENIE3', 'DeepSEM', 'Geneformer', 'scGPT', 'scFoundation', 'UCE', 'scLong']
 colors = [color_dict[model] for model in models]
  
 width = 1 / (len(models) + 1)
