@@ -49,9 +49,9 @@ class GEARS:
         self.proj_name = proj_name
         self.exp_name = exp_name
         
-        if self.weight_bias_track:
+        if self.weight_bias_track and self.is_master:
             import wandb
-            wandb.init(project=proj_name, name=exp_name, entity = "deanghoss")  
+            wandb.init(project=proj_name, name=exp_name)  
             self.wandb = wandb
         else:
             self.wandb = None
@@ -66,11 +66,16 @@ class GEARS:
             if 'train' in dl_key:
                 sampler = DistributedSampler(dataset)
                 self.dataloader[dl_key] = DataLoader(dataset, batch_size=train_bs, sampler=sampler)
+                print(f"[Rank {local_rank}] len(dataloader): {len(self.dataloader[dl_key])}")
             elif 'val' in dl_key:
                 sampler = SequentialDistributedSampler(dataset, batch_size=test_bs, world_size=self.world_size)
                 self.dataloader[dl_key] = DataLoader(dataset, batch_size=test_bs, sampler=sampler)
+                print(f"[Rank {local_rank}] len(dataloader): {len(self.dataloader[dl_key])}")
             else:
                 self.dataloader[dl_key] = dl
+                print(f"[Rank {local_rank}] len(dataloader): {len(self.dataloader[dl_key])}")
+
+
         self.adata = pert_data.adata
         self.node_map = pert_data.node_map
         self.data_path = pert_data.data_path
@@ -481,13 +486,12 @@ class GEARS:
             if self.is_master:
                 print_sys("Start Testing...")
             with torch.no_grad():
-                test_res = evaluate(test_loader, self.model.module, self.config['uncertainty'], self.device)
-                '''
+                #test_res = evaluate(test_loader, self.model.module, self.config['uncertainty'], self.device)
                 if not test:
                     test_res = evaluate(test_loader, self.model.module, self.config['uncertainty'], self.device)
                 else:
                     quick_model = debug_model()
-                    test_res = evaluate(test_loader, quick_model, self.config['uncertainty'], self.device)'''
+                    test_res = evaluate(test_loader, quick_model, self.config['uncertainty'], self.device)
             test_metrics, test_pert_res = compute_metrics(test_res)
             
             '''

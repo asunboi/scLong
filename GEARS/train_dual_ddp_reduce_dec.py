@@ -16,15 +16,20 @@ from gears_reduce.utils import print_sys
 
 
 def main(parser):
-
+    
+    # debugging utility in pytorch that identifies source of NaN / infinite values during backpropagation. 
     torch.autograd.set_detect_anomaly(True)
     
     args = parser.parse_args()
 
+    # local rank refers to GPU index used by process on a machine. For example, if a machine has 4 GPUs, local rank will be [0,3]
     local_rank = args.local_rank
     rank = int(os.environ["RANK"])
     is_master = rank == 0
 
+    # initializes the distributed training environment in pytorch using Nvidia Collective Communications Library (NCCL) backend
+    # optimized for GPU training. can use Message Passing Interface (MPI) backend, for HPC when running across multiple nodes.
+    # init_method = env:// initializes using environment variables such as RANK, WORLD_SIZE, MASTER_ADDR, etc.
     dist.init_process_group(backend='nccl', init_method='env://')
     print('DDP init!')
     local_rank = int(os.environ['LOCAL_RANK'])
@@ -34,6 +39,7 @@ def main(parser):
 
     print("local_rank: ", local_rank)
 
+    # presumably "validate every x", is an int with default=1
     valid_every = args.valid_every
 
     # get data
@@ -91,6 +97,7 @@ def main(parser):
                                 key_enc="merged_decodings",
                                 scfm_gene2vec_file = args.scfm_gene2vec_file,
                                 record_pred=args.record_pred)
+    print("finished initialization")
     gears_model.train(epochs = args.epochs, result_dir=args.result_dir,lr=args.lr, valid_every = valid_every)
 
     # save params

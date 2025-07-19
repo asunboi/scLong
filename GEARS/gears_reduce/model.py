@@ -6,7 +6,7 @@ import numpy as np
 import pickle
 from torch_geometric.nn import SGConv
 import sys
-sys.path.append('/home/ding.bai/ding-scfmv1-downstream')
+sys.path.append('/gpfs/home/asun/jin_lab/get/scLong')
 from performer_pytorch_cont.ding_models import PerformerLM_GO, DualEncoderSCFM
 from copy import deepcopy
 import pickle
@@ -142,7 +142,7 @@ class GEARS_Model_Acc(torch.nn.Module):
         if args.get('record_pred', False):
             self.pred_dir = f"./result_process/preds/{self.args['exp_name']}"
             if not os.path.exists(self.pred_dir):
-                os.mkdir(self.pred_dir)
+                os.makedirs(self.pred_dir)
             self.pred_batch_idx = 0
 
         self.num_genes = args['num_genes']
